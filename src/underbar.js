@@ -133,7 +133,7 @@ var _ = { };
   };
 
   // Calls the method named by methodName on each value in the list.
-  // Note: you will nead to learn a bit about .apply to complete this.
+  // Note: you will need to learn a bit about .apply to complete this.
   _.invoke = function(collection, functionOrKey, args) {
     var newArray = [];
     if(typeof functionOrKey === 'string'){

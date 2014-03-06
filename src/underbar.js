@@ -165,12 +165,12 @@ var _ = { };
   //     return total + number;
   //   }, 0); // should be 6
   _.reduce = function(collection, iterator, accumulator) {
-    if(accumulator){
-      var initialValue = accumulator;
-      var startPos = 0;
-    }else{
+    if(accumulator === undefined){
       var initialValue = collection[0];
       var startPos = 1;
+    }else{
+      var initialValue = accumulator;
+      var startPos = 0;
     }
     for (var i = startPos; i < collection.length; i++){
       var initialValue = iterator(initialValue, collection[i]);

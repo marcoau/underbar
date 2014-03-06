@@ -182,24 +182,48 @@ var _ = { };
   _.contains = function(collection, target) {
     // TIP: Many iteration problems can be most easily expressed in
     // terms of reduce(). Here's a freebie to demonstrate!
-    return _.reduce(collection, function(wasFound, item) {
-      if (wasFound) {
-        return true;
-      }
-      return item === target;
-    }, false);
+    if(Array.isArray(collection)){
+      //collection is an array.
+      return _.reduce(collection, function(wasFound, item) {
+        if (wasFound) {
+          return true;
+        }
+        return item === target;
+      }, false);
+    }else if(collection !== null && typeof collection === 'object'){
+      //collection is an object. ("typeof null bug" in JS remedied)
+      return _.reduce(Object.keys(collection), function(wasFound, item) {
+        if (wasFound) {
+          return true;
+        }
+        return collection[item] === target;
+      }, false);
+    }
   };
 
 
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
+    // Give a default iterator.
+    var iterator = iterator || _.identity;
     // TIP: Try re-using reduce() here.
+    return _.reduce(collection, function(isTrue, item){
+      if (!isTrue){
+        return false;
+      }
+      return Boolean(iterator(item));
+    },true);
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
+    var iterator = iterator || _.identity;
+    var iteratorFalse = function(item){
+      return !iterator(item); 
+    };
+    return !(_.every(collection, iteratorFalse));
   };
 
 
@@ -222,6 +246,7 @@ var _ = { };
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(obj) {
+    
   };
 
   // Like extend, but doesn't ever overwrite a key that already

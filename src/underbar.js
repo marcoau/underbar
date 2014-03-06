@@ -135,6 +135,20 @@ var _ = { };
   // Calls the method named by methodName on each value in the list.
   // Note: you will nead to learn a bit about .apply to complete this.
   _.invoke = function(collection, functionOrKey, args) {
+    var newArray = [];
+    if(typeof functionOrKey === 'string'){
+      _.each(collection, function(item){
+        if(item[functionOrKey] !== undefined){
+          newArray.push(item[functionOrKey].apply(item, args));
+        }
+      });
+    }else if(typeof functionOrKey === 'function'){
+      _.each(collection, function(item){
+        newArray.push(functionOrKey.apply(item, args));
+      });
+    }
+
+    return newArray;
   };
 
   // Reduces an array or object to a single value by repetitively calling
@@ -151,6 +165,17 @@ var _ = { };
   //     return total + number;
   //   }, 0); // should be 6
   _.reduce = function(collection, iterator, accumulator) {
+    if(accumulator){
+      var initialValue = accumulator;
+      var startPos = 0;
+    }else{
+      var initialValue = collection[0];
+      var startPos = 1;
+    }
+    for (var i = startPos; i < collection.length; i++){
+      var initialValue = iterator(initialValue, collection[i]);
+    }
+    return initialValue;
   };
 
   // Determine if the array or object contains a given value (using `===`).

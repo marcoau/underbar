@@ -347,6 +347,13 @@ var _ = { };
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
+    var multiArray = [];
+    for(var i = 0; i < array.length; i++){
+      multiArray.push([Math.random(), array[i]]);
+    }
+    console.log(multiArray);
+    multiArray.sort();
+    return _.map(multiArray, function(item){return item[1];});
   };
 
 

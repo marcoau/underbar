@@ -329,7 +329,7 @@ var _ = { };
       args.push(arguments[i]);
     }
     var delayedFunction = function(){
-      func.apply(this, args);
+      return func.apply(this, args);
     };
     console.log(args);
     setTimeout(delayedFunction, wait);

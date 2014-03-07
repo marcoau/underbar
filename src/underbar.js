@@ -505,5 +505,33 @@ var _ = { };
       }
     };
   };
+  
+  //Custom function similar to _.throttle, but allows queuing up of function calls.
+  _.queue = function(func, wait) {
+    var lastCalledTime;
+    var result;
+    return function(){
+      var thisTime = new Date();
+      if(thisTime - lastCalledTime < wait){
+        //console.log(thisTime - lastCalledTime);
+        //Delay Mode.
+        var delayedFunction = function(){
+          result = func.apply(this, arguments);
+          //Update lastCalledTime.
+        };
+        //Temporary lastCalledTime assigned.
+        lastCalledTime.setTime(lastCalledTime.getTime() + wait);
+        var delayTime = wait - (thisTime - lastCalledTime);
+        setTimeout(delayedFunction, wait - (thisTime - lastCalledTime));
+        console.log(delayTime);
+        return result;
+      }else{
+        //Okay mode.
+        result = func.apply(this, arguments);
+        lastCalledTime = thisTime;
+        return result;
+      }
+    };
+  };
 
 }).call(this);

@@ -403,6 +403,17 @@ var _ = { };
   // Example:
   // _.zip(['a','b','c','d'], [1,2,3]) returns [['a',1], ['b',2], ['c',3], ['d',undefined]]
   _.zip = function() {
+    var zippedArray = [];
+    var maxLength = _.reduce(arguments, function(length, arr){return Math.max(length, arr.length);}, 0);
+    //console.log(maxLength);
+    for(var i = 0; i < maxLength; i++){
+      var subArray = [];
+      for(var j = 0; j < arguments.length; j++){
+        subArray.push(arguments[j][i]);
+      }
+      zippedArray.push(subArray);
+    }
+    return zippedArray;
   };
 
   // Takes a multidimensional array and converts it to a one-dimensional array.
@@ -410,16 +421,48 @@ var _ = { };
   //
   // Hint: Use Array.isArray to check if something is an array
   _.flatten = function(nestedArray, result) {
+    for(var i = 0; i < nestedArray.length; i++){
+      if(Array.isArray(nestedArray[i])){
+        for(var j = 0; j < nestedArray[i].length; j++){
+          nestedArray.push(nestedArray[i][j]);
+        }
+        nestedArray.splice(i, 1);
+        //Recursion magic! Used to keep nestedArray.length updated.
+        _.flatten(nestedArray);
+      }
+    }
+    return nestedArray;
+
   };
 
   // Takes an arbitrary number of arrays and produces an array that contains
   // every item shared between all the passed-in arrays.
   _.intersection = function() {
+    return _.reduce(arguments, function(commonItems, array){
+      return _.filter(commonItems, function(item){
+        for(var i = 0; i < array.length; i++){
+          if(item === array[i]){
+            return true;
+          }
+        }
+        return false;
+      });
+    });
   };
 
   // Take the difference between one array and a number of other arrays.
   // Only the elements present in just the first array will remain.
   _.difference = function(array) {
+    return _.reduce(arguments, function(uniqueItems, array){
+      return _.filter(uniqueItems, function(item){
+        for(var i = 0; i < array.length; i++){
+          if(item === array[i]){
+            return false;
+          }
+        }
+        return true;
+      });
+    });
   };
 
 

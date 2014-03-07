@@ -371,27 +371,40 @@ var _ = { };
   // an array of people by their name.
   _.sortBy = function(collection, iterator) {
     var sortedArray = [];
-    
+    //Fix for "undefined sort()" JS bug.
+    var undefinedArray = [];
+
     if(typeof iterator === 'string'){
       for(var i = 0; i < collection.length; i++){
-        sortedArray.push([collection[i][iterator], collection[i]]);
+        //Fix for "undefined sort()" JS bug.
+        if(collection[i][iterator] === undefined){
+          undefinedArray.push([collection[i][iterator], collection[i]]);
+        }else{
+          sortedArray.push([collection[i][iterator], collection[i]]);
+        }
       }
     }else if(typeof iterator === 'function'){
       for(var i = 0; i < collection.length; i++){
-        sortedArray.push([iterator(collection[i]), collection[i]]);
+        //Fix for "undefined sort()" JS bug.
+        if(iterator(collection[i]) === undefined){
+          undefinedArray.push([iterator(collection[i]), collection[i]]);
+        }else{
+          sortedArray.push([iterator(collection[i]), collection[i]]);
+        }
       }
     }
     //Handling undefined values.
     sortedArray.sort(function(item1, item2){
-      if(item1[0] === undefined && item2[0] !== undefined){
-        return 1;
-      }
       return item1[0] - item2[0];
     });
-    //Keeping reference to original collection.
+
+    //Keeping reference to original collection, making sure it's changed.
     collection.length = 0;
     for(var i = 0; i < sortedArray.length; i++){
       collection.push(sortedArray[i][1]);
+    }
+    for(var i = 0; i < undefinedArray.length; i++){
+      collection.push(undefinedArray[i][1]);
     }
     
     return collection;

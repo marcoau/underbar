@@ -476,6 +476,34 @@ var _ = { };
   //
   // See the Underbar readme for details.
   _.throttle = function(func, wait) {
+    var lastCalledTime;
+    var result;
+    var scheduled = false;
+    return function(){
+      if(!scheduled){
+        var thisTime = new Date();
+        if(thisTime - lastCalledTime < wait){
+          //Delay Mode.
+          var delayedFunction = function(){
+            result = func.apply(this, arguments);
+            lastCalledTime = new Date();
+            scheduled = false;
+          };
+          scheduled = true;
+          setTimeout(delayedFunction, wait - (thisTime - lastCalledTime));
+          return result;
+        }else{
+          //Okay Mode.
+          result = func.apply(this, arguments);
+          lastCalledTime = thisTime;
+          return result;
+        }
+      }else{
+        //Scheduled Mode.
+        console.log("Scheduled already!");
+        return result;
+      }
+    };
   };
 
 }).call(this);

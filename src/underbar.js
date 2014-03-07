@@ -352,7 +352,9 @@ var _ = { };
       multiArray.push([Math.random(), array[i]]);
     }
     console.log(multiArray);
-    multiArray.sort();
+    multiArray.sort(function(item1, item2){
+      return item1[0] - item2[0];
+    });
     return _.map(multiArray, function(item){return item[1];});
   };
 

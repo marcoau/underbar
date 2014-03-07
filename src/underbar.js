@@ -368,6 +368,31 @@ var _ = { };
   // of that string. For example, _.sortBy(people, 'name') should sort
   // an array of people by their name.
   _.sortBy = function(collection, iterator) {
+    var sortedArray = [];
+    
+    if(typeof iterator === 'string'){
+      for(var i = 0; i < collection.length; i++){
+        sortedArray.push([collection[i][iterator], collection[i]]);
+      }
+    }else if(typeof iterator === 'function'){
+      for(var i = 0; i < collection.length; i++){
+        sortedArray.push([iterator(collection[i]), collection[i]]);
+      }
+    }
+    //Handling undefined values.
+    sortedArray.sort(function(item1, item2){
+      if(item1[0] === undefined && item2[0] !== undefined){
+        return 1;
+      }
+      return item1[0] - item2[0];
+    });
+    //Keeping reference to original collection.
+    collection.length = 0;
+    for(var i = 0; i < sortedArray.length; i++){
+      collection.push(sortedArray[i][1]);
+    }
+    
+    return collection;
   };
 
   // Zip together two or more arrays with elements of the same index
